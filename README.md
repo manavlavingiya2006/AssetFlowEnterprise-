@@ -66,4 +66,241 @@ sqlite> select * from users;
 See `ER-diagram.md` for how they relate to one another.
 =======
 # AssetFlowEnterprise-
+# 🚀 AssetFlow Enterprise
+
+AssetFlow Enterprise is a smart digital asset management platform developed to simplify the registration, tracking, allocation, maintenance, and monitoring of organizational assets. The system provides a centralized dashboard where administrators can efficiently manage assets while maintaining complete records and improving operational efficiency.
+
+---
+
+# 📌 Project Overview
+
+Organizations often face challenges in maintaining accurate records of their physical assets. AssetFlow Enterprise provides a modern web-based solution that enables users to manage assets digitally with secure authentication, real-time updates, and an easy-to-use interface.
+
+The application is built using a three-tier architecture consisting of:
+
+- Frontend
+- Backend
+- Database
+
+---
+
+# ✨ Features
+
+- User Authentication (Login & Signup)
+- Asset Registration
+- Asset Tracking
+- Asset Allocation Management
+- Dashboard Overview
+- Notification Support
+- AI Assistant Integration
+- Secure Backend APIs
+- Database Management using SQLite
+- Responsive User Interface
+
+---
+
+# 🛠 Technology Stack
+
+## Frontend
+- HTML5
+- CSS3
+- JavaScript
+
+## Backend
+- Node.js
+- Express.js
+
+## Database
+- SQLite
+
+---
+
+# 📁 Project Structure
+
+```
+AssetFlow/
+│
+├── frontend/
+│   ├── app.html
+│   ├── login.html
+│   ├── signup.html
+│   ├── css/
+│   └── js/
+│
+├── backend/
+│   ├── server.js
+│   ├── db.js
+│   ├── assistant.js
+│   ├── utils.js
+│   ├── seed.js
+│   ├── package.json
+│   └── package-lock.json
+│
+├── database/
+│   ├── assetflow.db
+│   ├── schema.sql
+│   ├── full_dump.sql
+│   └── ER-diagram.md
+│
+└── README.md
+```
+
+---
+
+# ⚙ Installation Guide
+
+## Step 1
+
+Clone the repository
+
+```bash
+git clone https://github.com/manavlavingiya2006/AssetFlowEnterprise-.git
+```
+
+## Step 2
+
+Navigate to backend
+
+```bash
+cd AssetFlow/backend
+```
+
+## Step 3
+
+Install dependencies
+
+```bash
+npm install
+```
+
+## Step 4
+
+Run the backend server
+
+```bash
+npm start
+```
+
+or
+
+```bash
+node server.js
+```
+
+## Step 5
+
+Open the frontend by launching:
+
+- login.html
+- signup.html
+- app.html
+
+using a browser or Live Server extension in Visual Studio Code.
+
+---
+
+# 🗄 Database
+
+The project uses **SQLite** as its database.
+
+Database files included:
+
+- assetflow.db
+- schema.sql
+- full_dump.sql
+- ER-diagram.md
+
+---
+
+# 👨‍💻 Team Contributions
+
+## 🎨 Frontend Development
+**Manav Lavingiya**
+
+Responsible for:
+
+- UI/UX Design
+- HTML Pages
+- CSS Styling
+- JavaScript Frontend Functionality
+- Responsive User Interface
+
+---
+
+## ⚙ Backend Development
+**Vaibhav Shah**
+
+Responsible for:
+
+- Node.js Server
+- Express.js APIs
+- Backend Logic
+- AI Assistant Integration
+- Database Connectivity
+- Utility Functions
+
+---
+
+## 🗄 Database Development
+**Rutva Patel**
+
+Responsible for:
+
+- Database Design
+- SQLite Database
+- Schema Design
+- SQL Scripts
+- ER Diagram
+- Database Documentation
+
+---
+
+# 👥 Team Members
+
+| Name | Role |
+|------|------|
+| Manav Lavingiya | Frontend Developer |
+| Vaibhav Shah | Backend Developer |
+| Rutva Patel | Database Developer |
+
+---
+
+# 🎯 Project Objective
+
+The primary objective of AssetFlow Enterprise is to provide a centralized, secure, and efficient platform for managing organizational assets digitally while reducing manual efforts, improving accuracy, and increasing productivity.
+
+---
+
+# 🔮 Future Enhancements
+
+- Cloud Database Integration
+- QR Code Based Asset Tracking
+- Barcode Scanner Support
+- Asset Analytics Dashboard
+- Mobile Application
+- Email Notifications
+- Multi-role Authentication
+- AI-based Asset Recommendations
+
+---
+
+# 📜 License
+
+This project has been developed solely for educational and hackathon purposes.
+
+---
+
+# ❤️ Acknowledgement
+
+We sincerely thank our mentors, faculty members, teammates, and the hackathon organizers for their continuous guidance, encouragement, and support throughout the development of this project.
+
+---
+
+## ⭐ Developed By
+
+**AssetFlow Enterprise Team**
+
+- **Manav Lavingiya** – Frontend Development
+- **Vaibhav Shah** – Backend Development
+- **Rutva Patel** – Database Development
 
