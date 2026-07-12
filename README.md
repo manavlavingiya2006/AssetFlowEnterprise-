@@ -1,3 +1,4 @@
+
 # AssetFlow — Database
 
 AssetFlow uses **SQLite** (via `better-sqlite3`) as an embedded, file-based
@@ -63,3 +64,6 @@ sqlite> select * from users;
 `audit_items`, `notifications`, `activity_logs`.
 
 See `ER-diagram.md` for how they relate to one another.
+=======
+# AssetFlowEnterprise-
+
