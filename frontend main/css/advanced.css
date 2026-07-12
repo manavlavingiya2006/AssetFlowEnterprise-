@@ -1,0 +1,234 @@
+/* ==========================================================================
+   AssetFlow — Advanced CSS layer
+   Loaded AFTER app.css / auth.css on every page. Purely additive: it
+   layers polish (motion, depth, feedback) on top of the existing design
+   system without changing markup or overriding the core palette.
+   ========================================================================== */
+
+/* ---------------- Global feel ---------------- */
+html { scroll-behavior: smooth; }
+
+*,
+*::before,
+*::after {
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::selection { background: var(--tag-amber); color: var(--ink-900); }
+
+/* Custom scrollbars (WebKit + Firefox) */
+* { scrollbar-width: thin; scrollbar-color: var(--grey-300) transparent; }
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--grey-300);
+  border-radius: 100px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--tag-amber-dark); background-clip: content-box; }
+
+/* Consistent, visible keyboard focus without messing with mouse users */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, .nav-item:focus-visible,
+.tab-btn:focus-visible, .icon-btn:focus-visible {
+  outline: 2px solid var(--tag-amber);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+/* ---------------- Buttons: lift + ripple ---------------- */
+.btn, .btn-primary, .btn-secondary, .btn-danger, .btn-ghost, .logout-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s, border-color 0.15s;
+}
+.btn:hover, .btn-primary:hover, .btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15, 27, 46, 0.12);
+}
+.btn:active, .btn-primary:active, .btn-secondary:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
+/* click ripple */
+.btn::after, .btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(255,255,255,0.55) 0%, transparent 60%);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.5s, transform 0.5s;
+  pointer-events: none;
+}
+.btn:active::after, .btn-primary:active::after { opacity: 1; transform: scale(1.6); transition: 0s; }
+
+/* ---------------- Cards: soft elevation on hover ---------------- */
+.card, .kpi-card {
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+}
+.card:hover, .kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(15, 27, 46, 0.10), 0 2px 6px rgba(15, 27, 46, 0.06);
+  border-color: rgba(222, 154, 60, 0.35);
+}
+.kpi-card { position: relative; }
+.kpi-card::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(180deg, var(--tag-amber), var(--tag-amber-dark));
+  border-radius: var(--radius-m) 0 0 var(--radius-m);
+  opacity: 0; transition: opacity 0.18s;
+}
+.kpi-card:hover::before { opacity: 1; }
+
+/* Gradient KPI numerals for a bit of shine */
+.kpi-card .kpi-value {
+  background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-600) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.kpi-card.accent .kpi-value { background: linear-gradient(135deg, var(--tag-amber-dark), var(--tag-amber)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.kpi-card.alert .kpi-value { background: linear-gradient(135deg, var(--alert-red), #e07a68); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* ---------------- Table rows ---------------- */
+tbody tr { transition: background 0.12s; }
+tbody tr:hover { background: var(--paper-100); }
+
+/* ---------------- Badges: subtle pulse for "waiting" states ---------------- */
+@keyframes pulse-soft {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(222, 154, 60, 0.35); }
+  50% { box-shadow: 0 0 0 4px rgba(222, 154, 60, 0); }
+}
+.badge-pending, .badge-requested, .badge-upcoming {
+  animation: pulse-soft 2.2s ease-in-out infinite;
+}
+
+/* ---------------- Nav items: sliding active indicator ---------------- */
+.nav-item { position: relative; transition: background 0.15s, color 0.15s, padding-left 0.15s; }
+.nav-item:hover { padding-left: 16px; }
+.nav-item.active::before {
+  content: '';
+  position: absolute; left: -14px; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 60%;
+  background: var(--tag-amber);
+  border-radius: 0 4px 4px 0;
+}
+
+/* ---------------- Modal: scale + fade entrance ---------------- */
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-overlay.show .modal-box { animation: modal-in 0.22s ease; }
+.modal-overlay.show {
+  animation: fadein 0.18s ease;
+  backdrop-filter: blur(2px);
+}
+
+/* ---------------- Notification panel + toast ---------------- */
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.notif-panel.show { animation: slide-in-right 0.2s ease; }
+.toast.show { animation: slide-in-right 0.25s ease; }
+.notif-badge { animation: pulse-soft 2s ease-in-out infinite; }
+
+/* ---------------- Skeleton loading shimmer (utility) ---------------- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--paper-200);
+  border-radius: var(--radius-s);
+  color: transparent !important;
+}
+.skeleton::after {
+  content: '';
+  position: absolute; inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+
+/* ---------------- Glassmorphism utility (opt-in via class="glass") ---------------- */
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* ---------------- Progress bar (opt-in component) ----------------
+   Usage: <div class="progress-bar"><span style="width:64%"></span></div> */
+.progress-bar {
+  width: 100%; height: 6px; border-radius: 100px;
+  background: var(--paper-200); overflow: hidden;
+}
+.progress-bar span {
+  display: block; height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, var(--tag-amber-dark), var(--tag-amber));
+  transition: width 0.5s ease;
+}
+
+/* ---------------- Auth page extras ---------------- */
+.auth-visual {
+  background-size: 200% 200%;
+  animation: gradient-drift 14s ease infinite;
+}
+@keyframes gradient-drift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.field input, .f-field input, .f-field select, .f-field textarea {
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.field input:focus {
+  box-shadow: 0 0 0 3px rgba(222, 154, 60, 0.18);
+}
+.f-field input:focus, .f-field select:focus, .f-field textarea:focus {
+  box-shadow: 0 0 0 3px rgba(222, 154, 60, 0.12);
+}
+.auth-card { animation: fadein 0.35s ease; }
+
+/* ---------------- Responsive: collapsible sidebar on small screens ---------------- */
+@media (max-width: 760px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar {
+    position: sticky; top: 0; height: auto; z-index: 30;
+    flex-direction: row; align-items: center; overflow-x: auto;
+    padding: 10px 12px;
+  }
+  .sidebar .brand { padding: 0 12px 0 0; }
+  .sidebar nav#navMenu { display: flex; gap: 4px; }
+  .nav-group { display: flex; align-items: center; margin-bottom: 0; }
+  .nav-label { display: none; }
+  .nav-item:hover { padding-left: 12px; }
+  .sidebar-footer { display: none; }
+  .content { padding: 16px; }
+  .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+}
+
+/* ---------------- Respect reduced-motion preference ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------------- Print styles (handy for exporting reports) ---------------- */
+@media print {
+  .sidebar, .topbar, .filter-bar, .btn, .modal-overlay, .notif-panel, .toast { display: none !important; }
+  .app-shell { display: block; }
+  .content { padding: 0; }
+  .card, .kpi-card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  body { background: #fff; }
+}

@@ -1,0 +1,28 @@
+:root {
+  /* Ink & Paper palette - industrial asset-tag identity */
+  --ink-900: #0F1B2E;
+  --ink-800: #16263F;
+  --ink-700: #1F3253;
+  --ink-600: #2E4569;
+  --paper-0: #FBFAF7;
+  --paper-100: #F3F1EA;
+  --paper-200: #E8E4D8;
+  --tag-amber: #DE9A3C;
+  --tag-amber-dark: #B9791F;
+  --ok-green: #3F8F6D;
+  --ok-green-bg: #E5F2EB;
+  --alert-red: #C1503F;
+  --alert-red-bg: #FBE9E6;
+  --info-blue: #3B6EA8;
+  --info-blue-bg: #E7EEF6;
+  --grey-500: #6B7280;
+  --grey-300: #C9C6BC;
+
+  --font-display: 'Zilla Slab', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --radius-s: 6px;
+  --radius-m: 10px;
+  --shadow-card: 0 1px 2px rgba(15,27,46,0.06), 0 4px 14px rgba(15,27,46,0.06);
+}

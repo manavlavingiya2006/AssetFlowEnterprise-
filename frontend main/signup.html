@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AssetFlow — Create Account</title>
+<link rel="stylesheet" href="css/auth.css">
+<link rel="stylesheet" href="css/advanced.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-visual">
+    <div class="brand-mark">
+      <svg class="tagstub" viewBox="0 0 34 34" fill="none">
+        <path d="M4 4H22L30 12V26C30 28.2091 28.2091 30 26 30H4V4Z" stroke="#DE9A3C" stroke-width="2" fill="rgba(222,154,60,0.08)"/>
+        <circle cx="11" cy="11" r="2.4" stroke="#DE9A3C" stroke-width="1.6"/>
+      </svg>
+      <span>AssetFlow</span>
+    </div>
+
+    <div>
+      <div class="visual-copy">
+        <h1>Every account starts on equal footing.</h1>
+        <p>New sign-ups join as Employees. Admins grant Department Head or Asset Manager access from the Organization directory — nobody self-assigns a role.</p>
+      </div>
+      <div class="tag-stack">
+        <div class="float-tag t1"><span class="hole"></span><b>Employee</b> <span class="state state-available">default role</span></div>
+        <div class="float-tag t2"><span class="hole"></span><b>Dept. Head</b> <span class="state state-allocated">admin-granted</span></div>
+        <div class="float-tag t3"><span class="hole"></span><b>Asset Mgr</b> <span class="state state-maint">admin-granted</span></div>
+      </div>
+    </div>
+
+    <footer>Enterprise Asset &amp; Resource Management</footer>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-card">
+      <h2>Create your account</h2>
+      <p class="sub">Sign up as an Employee. Your Admin can grant elevated access later.</p>
+
+      <div class="alert-box error" id="errBox"></div>
+      <div class="alert-box success" id="okBox"></div>
+
+      <form id="signupForm">
+        <div class="field">
+          <label>Full name</label>
+          <input type="text" id="name" placeholder="Jordan Lee" required>
+        </div>
+        <div class="field">
+          <label>Work email</label>
+          <input type="email" id="email" placeholder="you@company.com" required autocomplete="username">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="At least 6 characters" required minlength="6" autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn-primary" id="signupBtn">Create account</button>
+        <p class="role-note">By signing up you'll be added to the Employee Directory with the standard Employee role.</p>
+      </form>
+
+      <p class="auth-alt">Already have an account? <a href="login.html">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+const form = document.getElementById('signupForm');
+const errBox = document.getElementById('errBox');
+const okBox = document.getElementById('okBox');
+const signupBtn = document.getElementById('signupBtn');
+
+if (localStorage.getItem('af_token')) window.location.href = 'app.html';
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errBox.classList.remove('show'); okBox.classList.remove('show');
+  signupBtn.disabled = true; signupBtn.textContent = 'Creating account...';
+  try {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    await api('/auth/signup', 'POST', { name, email, password }, false);
+    okBox.textContent = 'Account created! Redirecting to sign in...';
+    okBox.classList.add('show');
+    setTimeout(() => window.location.href = 'login.html', 1200);
+  } catch (err) {
+    errBox.textContent = err.message || 'Signup failed';
+    errBox.classList.add('show');
+  } finally {
+    signupBtn.disabled = false; signupBtn.textContent = 'Create account';
+  }
+});
+</script>
+</body>
+</html>

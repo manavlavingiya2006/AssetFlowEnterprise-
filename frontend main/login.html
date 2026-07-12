@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AssetFlow — Sign In</title>
+<link rel="stylesheet" href="css/auth.css">
+<link rel="stylesheet" href="css/advanced.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-visual">
+    <div class="brand-mark">
+      <svg class="tagstub" viewBox="0 0 34 34" fill="none">
+        <path d="M4 4H22L30 12V26C30 28.2091 28.2091 30 26 30H4V4Z" stroke="#DE9A3C" stroke-width="2" fill="rgba(222,154,60,0.08)"/>
+        <circle cx="11" cy="11" r="2.4" stroke="#DE9A3C" stroke-width="1.6"/>
+      </svg>
+      <span>AssetFlow</span>
+    </div>
+
+    <div>
+      <div class="visual-copy">
+        <h1>Know where every asset is, always.</h1>
+        <p>One system of record for equipment, rooms, and fleets — from registration through retirement.</p>
+      </div>
+      <div class="tag-stack">
+        <div class="float-tag t1"><span class="hole"></span><b>AF-0001</b> Laptop <span class="state state-available">Available</span></div>
+        <div class="float-tag t2"><span class="hole"></span><b>AF-0114</b> Laptop <span class="state state-allocated">Allocated</span></div>
+        <div class="float-tag t3"><span class="hole"></span><b>AF-0007</b> Projector <span class="state state-maint">Maintenance</span></div>
+      </div>
+    </div>
+
+    <footer>Enterprise Asset &amp; Resource Management</footer>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-card">
+      <h2>Sign in</h2>
+      <p class="sub">Access your organization's AssetFlow workspace.</p>
+
+      <div class="alert-box error" id="errBox"></div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label>Work email</label>
+          <input type="email" id="email" placeholder="you@company.com" required autocomplete="username">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <a href="#" class="forgot-link" id="forgotLink">Forgot password?</a>
+        <button type="submit" class="btn-primary" id="loginBtn">Sign in</button>
+      </form>
+
+      <p class="auth-alt">New to AssetFlow? <a href="signup.html">Create an employee account</a></p>
+
+      <div class="demo-creds">
+        <b>Demo accounts</b> (seeded for presentation)<br>
+        Admin — admin@assetflow.com / admin123<br>
+        Asset Manager — manager@assetflow.com / manager123<br>
+        Dept. Head — rohan.head@assetflow.com / rohan123<br>
+        Employee — priya@assetflow.com / priya123
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+const form = document.getElementById('loginForm');
+const errBox = document.getElementById('errBox');
+const loginBtn = document.getElementById('loginBtn');
+
+// If already logged in, go straight to app
+if (localStorage.getItem('af_token')) window.location.href = 'app.html';
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errBox.classList.remove('show');
+  loginBtn.disabled = true; loginBtn.textContent = 'Signing in...';
+  try {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const data = await api('/auth/login', 'POST', { email, password }, false);
+    localStorage.setItem('af_token', data.token);
+    localStorage.setItem('af_user', JSON.stringify(data.user));
+    window.location.href = 'app.html';
+  } catch (err) {
+    errBox.textContent = err.message || 'Login failed';
+    errBox.classList.add('show');
+  } finally {
+    loginBtn.disabled = false; loginBtn.textContent = 'Sign in';
+  }
+});
+
+document.getElementById('forgotLink').addEventListener('click', async (e) => {
+  e.preventDefault();
+  const email = prompt('Enter your account email to receive a reset link:');
+  if (!email) return;
+  try {
+    const res = await api('/auth/forgot-password', 'POST', { email }, false);
+    alert(res.message);
+  } catch (err) {
+    alert(err.message || 'Could not process request');
+  }
+});
+</script>
+</body>
+</html>

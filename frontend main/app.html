@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AssetFlow — Workspace</title>
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/advanced.css">
+<link rel="stylesheet" href="css/assistant.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 34 34" fill="none">
+        <path d="M4 4H22L30 12V26C30 28.2091 28.2091 30 26 30H4V4Z" stroke="#DE9A3C" stroke-width="2" fill="rgba(222,154,60,0.1)"/>
+        <circle cx="11" cy="11" r="2.4" stroke="#DE9A3C" stroke-width="1.6"/>
+      </svg>
+      AssetFlow
+    </div>
+
+    <nav id="navMenu">
+      <div class="nav-group">
+        <div class="nav-item active" data-screen="dashboard"><span class="dot"></span>Dashboard</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">Setup &amp; Records</div>
+        <div class="nav-item" data-screen="orgsetup" data-roles="Admin"><span class="dot"></span>Organization Setup</div>
+        <div class="nav-item" data-screen="assets"><span class="dot"></span>Asset Directory</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">Operations</div>
+        <div class="nav-item" data-screen="allocations"><span class="dot"></span>Allocation &amp; Transfer</div>
+        <div class="nav-item" data-screen="bookings"><span class="dot"></span>Resource Booking</div>
+        <div class="nav-item" data-screen="maintenance"><span class="dot"></span>Maintenance</div>
+        <div class="nav-item" data-screen="audits"><span class="dot"></span>Asset Audit</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">Insight</div>
+        <div class="nav-item" data-screen="reports"><span class="dot"></span>Reports &amp; Analytics</div>
+        <div class="nav-item" data-screen="logs" data-roles="Admin,Asset Manager,Department Head"><span class="dot"></span>Activity Logs</div>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar" id="userInitial">A</div>
+        <div class="user-meta">
+          <div class="uname" id="userName">—</div>
+          <div class="urole" id="userRole">—</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="screenTitle">Dashboard</h1>
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" id="quickRegisterBtn">+ Register Asset</button>
+        <div style="position:relative;">
+          <button class="icon-btn" id="notifBtn">🔔<span class="notif-badge" id="notifCount" style="display:none;">0</span></button>
+          <div class="notif-panel" id="notifPanel"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+
+      <!-- DASHBOARD -->
+      <section class="screen active" id="screen-dashboard">
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-head"><h3>Overdue Returns</h3></div>
+            <div class="table-wrap"><table><thead><tr><th>Tag</th><th>Asset</th><th>Held By</th><th>Expected Return</th></tr></thead><tbody id="overdueTable"></tbody></table></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Upcoming Returns</h3></div>
+            <div class="table-wrap"><table><thead><tr><th>Tag</th><th>Asset</th><th>Held By</th><th>Expected Return</th></tr></thead><tbody id="upcomingTable"></tbody></table></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Quick Actions</h3></div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-secondary" id="qaRegister" onclick="goScreen('assets'); setTimeout(openRegisterModal,150)">📦 Register Asset</button>
+            <button class="btn btn-secondary" onclick="goScreen('bookings'); setTimeout(openBookingModal,150)">📅 Book Resource</button>
+            <button class="btn btn-secondary" onclick="goScreen('maintenance'); setTimeout(openMaintModal,150)">🔧 Raise Maintenance Request</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORG SETUP (Admin only) -->
+      <section class="screen" id="screen-orgsetup">
+        <p class="section-desc">Master data that everything else depends on.</p>
+        <div class="tabs">
+          <div class="tab-btn active" data-tab="dept">Departments</div>
+          <div class="tab-btn" data-tab="cat">Asset Categories</div>
+          <div class="tab-btn" data-tab="emp">Employee Directory</div>
+        </div>
+        <div class="tab-panel active" id="tab-dept">
+          <div class="card">
+            <div class="card-head"><h3>Departments</h3><button class="btn btn-primary btn-sm" onclick="openDeptModal()">+ New Department</button></div>
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Head</th><th>Parent</th><th>Status</th><th></th></tr></thead><tbody id="deptTable"></tbody></table></div>
+          </div>
+        </div>
+        <div class="tab-panel" id="tab-cat">
+          <div class="card">
+            <div class="card-head"><h3>Asset Categories</h3><button class="btn btn-primary btn-sm" onclick="openCatModal()">+ New Category</button></div>
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Extra Fields</th><th></th></tr></thead><tbody id="catTable"></tbody></table></div>
+          </div>
+        </div>
+        <div class="tab-panel" id="tab-emp">
+          <div class="card">
+            <div class="card-head"><h3>Employee Directory</h3></div>
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Department</th><th>Role</th><th>Status</th><th>Promote</th></tr></thead><tbody id="empTable"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ASSET DIRECTORY -->
+      <section class="screen" id="screen-assets">
+        <div class="filter-bar">
+          <input type="text" id="assetSearch" placeholder="Search tag, serial, name...">
+          <select id="assetStatusFilter"><option value="">All statuses</option><option>Available</option><option>Allocated</option><option>Reserved</option><option>Under Maintenance</option><option>Lost</option><option>Retired</option><option>Disposed</option></select>
+          <select id="assetCatFilter"><option value="">All categories</option></select>
+          <button class="btn btn-secondary btn-sm" onclick="loadAssets()">Filter</button>
+          <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="openRegisterModal()">+ Register Asset</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap"><table><thead><tr><th>Tag</th><th>Name</th><th>Category</th><th>Status</th><th>Location</th><th>Holder</th><th>Bookable</th><th></th></tr></thead><tbody id="assetTable"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- ALLOCATION & TRANSFER -->
+      <section class="screen" id="screen-allocations">
+        <div class="tabs">
+          <div class="tab-btn active" data-tab="alloc">Allocations</div>
+          <div class="tab-btn" data-tab="transfer">Transfer Requests</div>
+        </div>
+        <div class="tab-panel active" id="tab-alloc">
+          <div class="card">
+            <div class="card-head"><h3>Asset Allocations</h3><button class="btn btn-primary btn-sm" onclick="openAllocateModal()">+ Allocate Asset</button></div>
+            <div class="table-wrap"><table><thead><tr><th>Tag</th><th>Asset</th><th>Employee</th><th>Allocated</th><th>Expected Return</th><th>Status</th><th></th></tr></thead><tbody id="allocTable"></tbody></table></div>
+          </div>
+        </div>
+        <div class="tab-panel" id="tab-transfer">
+          <div class="card">
+            <div class="card-head"><h3>Transfer Requests</h3></div>
+            <div class="table-wrap"><table><thead><tr><th>Tag</th><th>Asset</th><th>From</th><th>To</th><th>Status</th><th>Requested</th><th></th></tr></thead><tbody id="transferTable"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESOURCE BOOKING -->
+      <section class="screen" id="screen-bookings">
+        <div class="filter-bar">
+          <select id="bookingAssetFilter"><option value="">All bookable resources</option></select>
+          <button class="btn btn-secondary btn-sm" onclick="loadBookings()">Filter</button>
+          <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="openBookingModal()">+ Book Resource</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap"><table><thead><tr><th>Resource</th><th>Booked By</th><th>Start</th><th>End</th><th>Purpose</th><th>Status</th><th></th></tr></thead><tbody id="bookingTable"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- MAINTENANCE -->
+      <section class="screen" id="screen-maintenance">
+        <div class="card-head" style="margin-bottom:16px;"><div></div><button class="btn btn-primary btn-sm" onclick="openMaintModal()">+ Raise Request</button></div>
+        <div class="card">
+          <div class="table-wrap"><table><thead><tr><th>Tag</th><th>Asset</th><th>Issue</th><th>Priority</th><th>Raised By</th><th>Status</th><th></th></tr></thead><tbody id="maintTable"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- AUDITS -->
+      <section class="screen" id="screen-audits">
+        <div class="card-head" style="margin-bottom:16px;"><div></div><button class="btn btn-primary btn-sm" id="newAuditBtn" onclick="openAuditModal()">+ New Audit Cycle</button></div>
+        <div id="auditCycles"></div>
+      </section>
+
+      <!-- REPORTS -->
+      <section class="screen" id="screen-reports">
+        <div class="two-col">
+          <div class="card"><div class="card-head"><h3>Assets by Status</h3></div><div id="rpt-status"></div></div>
+          <div class="card"><div class="card-head"><h3>Assets by Category</h3></div><div id="rpt-category"></div></div>
+          <div class="card"><div class="card-head"><h3>Maintenance Frequency by Category</h3></div><div id="rpt-maint"></div></div>
+          <div class="card"><div class="card-head"><h3>Department-wise Allocation</h3></div><div id="rpt-dept"></div></div>
+          <div class="card"><div class="card-head"><h3>Nearing Retirement (5+ yrs)</h3></div><div id="rpt-retire"></div></div>
+          <div class="card"><div class="card-head"><h3>Booking Heatmap (by hour)</h3></div><div id="rpt-heatmap"></div></div>
+        </div>
+      </section>
+
+      <!-- LOGS -->
+      <section class="screen" id="screen-logs">
+        <div class="card">
+          <div class="card-head"><h3>Activity Log</h3></div>
+          <div class="table-wrap"><table><thead><tr><th>When</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody id="logsTable"></tbody></table></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay"><div class="modal-box" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/assistant.js"></script>
+</body>
+</html>
