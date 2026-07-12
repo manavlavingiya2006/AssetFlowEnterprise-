@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('./db');
 const { JWT_SECRET, authRequired, requireRole, notify, log } = require('./utils');
+const { getAssistantReply } = require('./assistant');
 
 const app = express();
 app.use(cors());
@@ -467,6 +468,20 @@ app.get('/api/reports/summary', authRequired, (req, res) => {
     WHERE acquisition_date IS NOT NULL AND date(acquisition_date) < date('now','-5 years')`).all();
   const bookingHeatmap = db.prepare(`SELECT strftime('%H', start_time) as hour, COUNT(*) c FROM bookings GROUP BY hour ORDER BY hour`).all();
   res.json({ byStatus, byCategory, maintenanceByCategory, departmentAllocation, nearingRetirement, bookingHeatmap });
+});
+
+/* ---------------- AI ASSISTANT ---------------- */
+
+app.post('/api/assistant/chat', authRequired, async (req, res) => {
+  const { message, history } = req.body;
+  if (!message || !String(message).trim()) return res.status(400).json({ error: 'Message is required' });
+  try {
+    const result = await getAssistantReply({ user: req.user, message: String(message).trim(), history });
+    res.json(result);
+  } catch (err) {
+    console.error('[assistant] error:', err.message);
+    res.status(500).json({ error: 'Assistant is unavailable right now' });
+  }
 });
 
 /* ---------------- START ---------------- */
